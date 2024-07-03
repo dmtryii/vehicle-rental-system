@@ -3,12 +3,12 @@ from typing import List
 from datetime import date
 
 from app.helpers import converters 
-from app.models.users import BaseUser
+from app.models.users import User
 from app.exceptions.user_exception import InvalidAgeException
 
 
 def get_all() -> List:
-    return BaseUser.query.all()
+    return User.query.all()
 
         
 def check_min_age(birthday: str, min_age: int) -> None:

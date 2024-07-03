@@ -4,14 +4,13 @@ import os
 from flask_jwt_extended import create_access_token
 
 from app.exceptions.auth_exception import InvalidCredentialsException
+from app.exceptions.base_exception import EmptyFieldException, EntityAllreadyPresentException
 from app.extensions import db
 from app.exceptions.user_exception import (
-    EmptyFieldException,
     InvalidEmailException, 
-    PasswordTooShortException, 
-    UsernameAllreadyPresentException)
+    PasswordTooShortException)
 from app.helpers.validation import validate_email
-from app.models.users import BaseUser, Gender, Role
+from app.models.users import User, Gender, Role
 from app.services.users_services import check_min_age
 
 
@@ -22,7 +21,7 @@ def singin(username: str, password: str) -> str:
     if not password:
         raise EmptyFieldException(message='Missing password')
     
-    user = BaseUser.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username).first()
     if not user or not user.check_password(password):
         raise InvalidCredentialsException()
 
@@ -44,15 +43,15 @@ def singup(username: str, password: str, email: str,
     if not validate_email(email):
         raise InvalidEmailException()
     
-    user = BaseUser.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username).first()
     
     if user:
-        raise UsernameAllreadyPresentException()
+        raise EntityAllreadyPresentException('User with that username is already present')
     
     min_age = int(os.environ.get('MIN_AGE'))
     check_min_age(birthday, min_age)
         
-    new_user = BaseUser(
+    new_user = User(
         username=username,
         email=email,
         first_name=first_name,
@@ -71,7 +70,7 @@ def singup(username: str, password: str, email: str,
     return create_access_token(identity=new_user.id)
 
 
-def __set_default_role(user: BaseUser) -> None:
+def __set_default_role(user: User) -> None:
     role = Role.query.filter_by(name='default').first()
 
     if not role:

@@ -21,8 +21,10 @@ def create_app(config_class=Config):
     # Register blueprints
     from app.controllers.users import bp as users_bp
     from app.controllers.auth import bp as auth_bp
+    from app.controllers.vehicles import bp as vehicles_bp
     app.register_blueprint(users_bp, url_prefix='/users')
     app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(vehicles_bp, url_prefix='/vehicles')
         
     # Register error handlers
     app.register_error_handler(InvalidUsage, handle_invalid_usage)
