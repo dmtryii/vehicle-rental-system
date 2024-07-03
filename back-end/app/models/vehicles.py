@@ -1,17 +1,8 @@
 
-from enum import Enum
 from sqlalchemy_serializer import SerializerMixin
 
 from app.extensions import db
-
-
-class Status(Enum):
-    AVAILABLE = 'AVAILABLE'
-    RENTED_OUT = 'RENTED_OUT'
-    UNDER_MAINTENANCE = 'UNDER_MAINTENANCE'
-
-    def __str__(self):
-        return self.value
+from app.helpers.enums import Status
 
 
 class Manufacturer(db.Model, SerializerMixin):
@@ -20,7 +11,12 @@ class Manufacturer(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     country = db.Column(db.String, nullable=False)
-    cars = db.relationship('Vehicle', back_populates='manufacturer', cascade='all, delete-orphan')
+    
+    vehicles = db.relationship('Vehicle', back_populates='manufacturer')
+    
+    serialize_rules = (
+        '-vehicles.manufacturer',
+    )
 
 
 class Vehicle(db.Model, SerializerMixin):
@@ -34,7 +30,8 @@ class Vehicle(db.Model, SerializerMixin):
     license_plate = db.Column(db.String, nullable=False, unique=True)
     description = db.Column(db.Text, nullable=True)
     
-    manufacturer_id = db.Column(db.Integer, db.ForeignKey('manufacturers.id'), nullable=False)
+    manufacturer_id = db.Column(db.Integer, db.ForeignKey('manufacturers.id'))
     manufacturer = db.relationship('Manufacturer', back_populates='vehicles')
     
-    rentals = db.relationship('Rental', back_populates='vehicle', cascade='all, delete-orphan')
+    rentals = db.relationship('Rental', back_populates='vehicle')
+    
