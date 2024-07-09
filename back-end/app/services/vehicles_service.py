@@ -1,8 +1,13 @@
 
+from typing import List
 from app.exceptions.base_exception import EmptyFieldException, EntityAllreadyPresentException, EntityNotFoundException, ImpossibleFieldValueError
 from app.helpers.enums import Status
 from app.models.vehicles import Manufacturer, Vehicle
 from app.extensions import db
+
+
+def get_all_vehicle() -> List[Vehicle]:
+    return Vehicle.query.all()
 
 
 def create_manufacturer(name: str, country: str) -> Manufacturer:

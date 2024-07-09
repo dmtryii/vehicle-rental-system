@@ -15,7 +15,7 @@ class Manufacturer(db.Model, SerializerMixin):
     vehicles = db.relationship('Vehicle', back_populates='manufacturer')
     
     serialize_rules = (
-        '-vehicles.manufacturer',
+        '-vehicles',
     )
 
 
@@ -34,4 +34,8 @@ class Vehicle(db.Model, SerializerMixin):
     manufacturer = db.relationship('Manufacturer', back_populates='vehicles')
     
     rentals = db.relationship('Rental', back_populates='vehicle')
+    
+    serialize_rules = (
+        '-rentals',
+    )
     

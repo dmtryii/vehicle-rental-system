@@ -4,6 +4,13 @@ from app.controllers.vehicles import bp
 from app.services import vehicles_service
 
 
+@bp.route('/')
+def get_all_vehicles():
+    vehicles = vehicles_service.get_all_vehicle()
+    json_respone = [vehicle.to_dict() for vehicle in vehicles]
+    return jsonify(json_respone), 200
+
+
 @bp.route('/', methods=['POST'])
 def create_vehicle():
     data = request.get_json()

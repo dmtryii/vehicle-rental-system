@@ -48,7 +48,9 @@ class User(db.Model, SerializerMixin):
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         
     def check_password(self, password):
-        return bcrypt.SerializerMixin(self.password_hash, password)
+        return bcrypt.check_password_hash(self.password_hash, password)
+    
+    serialize_rules = ('-password_hash', '-roles.users', '-rentals.user', '-discounts.users')
        
     
 class Role(db.Model, SerializerMixin):
@@ -59,3 +61,4 @@ class Role(db.Model, SerializerMixin):
     
     users = db.relationship('User', secondary=user_role, back_populates='roles')
     
+    serialize_rules = ('-users.roles',)
