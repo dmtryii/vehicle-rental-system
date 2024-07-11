@@ -30,6 +30,8 @@ class Vehicle(db.Model, SerializerMixin):
     license_plate = db.Column(db.String, nullable=False, unique=True)
     description = db.Column(db.Text, nullable=True)
     
+    picture_url = db.Column(db.String, nullable=True)
+    
     manufacturer_id = db.Column(db.Integer, db.ForeignKey('manufacturers.id'))
     manufacturer = db.relationship('Manufacturer', back_populates='vehicles')
     
