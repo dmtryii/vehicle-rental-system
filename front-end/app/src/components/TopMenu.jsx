@@ -11,7 +11,7 @@ const TopMenu = () => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" style={{ flexGrow: 1 }}>
-          Vehicle Rental System
+          Vehicle Rental System say
         </Typography>
         <Box>
 
@@ -26,7 +26,7 @@ const TopMenu = () => {
           )}
 
           <Button color="inherit" onClick={() => navigate('/account')}>
-            Account
+            Account ({authState.user ? authState.user.username : 'guest'})
           </Button>
 
           {!authState.user ? (
